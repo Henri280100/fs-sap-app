@@ -6,9 +6,12 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
+    "@cap-js/hana": "^2",
     "@sap/cds": "^9",
+    "cds-launchpad-plugin": "^2.2.0",
+    "content-disposition": "^0.5.4",
     "express": "^4",
-    "@cap-js/hana": "^2"
+    "npm": "^11.4.2"
   },
   "engines": {
     "node": ">=20"
@@ -16,11 +19,20 @@
   "devDependencies": {
     "@cap-js/cds-types": "^0.11.0",
     "@cap-js/sqlite": "^2",
-    "@sap/cds-dk": ">=8"
+    "@sap/cds-dk": ">=8",
+    "mbt": "^1.2.29",
+    "rimraf": "^5.0.5"
   },
   "scripts": {
-    "start": "cds-serve"
+    "start": "cds-serve",
+    "undeploy": "cf undeploy fs-sap-ui-app --delete-services --delete-service-keys --delete-service-brokers",
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
   },
+  "sapux": [
+    "app/fssap",
+    "app/fsNavigation"
+  ],
   "cds": {
     "requires": {
       "destinations": true,

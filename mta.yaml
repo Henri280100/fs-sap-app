@@ -28,6 +28,14 @@ modules:
       - name: fs-sap-ui-app-destination
       - name: fs-sap-ui-app-db
 
+  - name: fs-sap-ui-app-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    requires:
+      - name: fs-sap-ui-app-db
+
   - name: fs-sap-ui-app-app-deployer
     type: com.sap.application.content
     path: gen
@@ -38,37 +46,53 @@ modules:
     build-parameters:
       build-result: app/
       requires:
+        - name: fssapuiappfsNavigation
+          artifacts:
+            - fsNavigation.zip
+          target-path: app/
+        - name: fssapuiappfssap
+          artifacts:
+            - fssap.zip
+          target-path: app/
+        - name: fssapuiappmedia
+          artifacts:
+            - media.zip
+          target-path: app/
 
+  - name: fssapuiappfsNavigation
+    type: html5
+    path: app/fsNavigation
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm ci
+        - npm run build
+      supported-platforms:
+        []
+  - name: fssapuiappfssap
+    type: html5
+    path: app/fssap
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm ci
+        - npm run build
+      supported-platforms:
+        []
+  - name: fssapuiappmedia
+    type: html5
+    path: app/media
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm ci
+        - npm run build
+      supported-platforms:
+        []
 
-  - name: fs-sap-ui-app-db-deployer
-    type: hdb
-    path: gen/db
-    parameters:
-      buildpack: nodejs_buildpack
-    requires:
-      - name: fs-sap-ui-app-db
-
-  - name: fs-sap-ui-app
-    type: approuter.nodejs
-    path: app/router
-    parameters:
-      keep-existing-routes: true
-      disk-quota: 256M
-      memory: 256M
-    requires:
-      - name: srv-api
-        group: destinations
-        properties:
-          name: srv-api # must be used in xs-app.json as well
-          url: ~{srv-url}
-          forwardAuthToken: true
-      - name: fs-sap-ui-app-destination
-      - name: fs-sap-ui-app-html5-runtime
-    provides:
-      - name: app-api
-        properties:
-          app-protocol: ${protocol}
-          app-uri: ${default-uri}
 resources:
   - name: fs-sap-ui-app-destination
     type: org.cloudfoundry.managed-service
@@ -93,19 +117,14 @@ resources:
                 Authentication: NoAuthentication
                 Type: HTTP
                 ProxyType: Internet
+  - name: fs-sap-ui-app-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
 
   - name: fs-sap-ui-app-html5-repo-host
     type: org.cloudfoundry.managed-service
     parameters:
       service: html5-apps-repo
       service-plan: app-host
-  - name: fs-sap-ui-app-db
-    type: com.sap.xs.hdi-container
-    parameters:
-      service: hana
-      service-plan: hdi-shared
-  - name: fs-sap-ui-app-html5-runtime
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: html5-apps-repo
-      service-plan: app-runtime
