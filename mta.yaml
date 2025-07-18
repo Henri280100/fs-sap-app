@@ -96,6 +96,8 @@ modules:
 resources:
   - name: fs-sap-ui-app-destination
     type: org.cloudfoundry.managed-service
+    requires:
+      - name: srv-api
     parameters:
       service: destination
       service-plan: lite

@@ -4,11 +4,11 @@ sap.ui.define([
 	"sap/suite/ui/microchart/ComparisonMicroChart",
 	"sap/suite/ui/microchart/ComparisonMicroChartData"
 ], function (PageController, JSONModel, ComparisonMicroChart, ComparisonMicroChartData) {
-	return PageController.extend("sap.fe.featureShowcase.mainApp.ext.controller.CustomObjectPage", {
+	return PageController.extend("sap.fssap.mainApp.ext.controller.CustomObjectPage", {
 		onInit: function () {
 			PageController.prototype.onInit.apply(this);
 
-			var oModel = new JSONModel(sap.ui.require.toUrl("sap/fe/featureShowcase/mainApp/ext/controller/data.json"));
+			var oModel = new JSONModel(sap.ui.require.toUrl("sap/fssap/mainApp/ext/controller/data.json"));
 			var that = this;
 
 			this.getView().setModel(oModel, 'graph');

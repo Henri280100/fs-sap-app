@@ -1,7 +1,7 @@
 {
     "_version": "1.32.0",
     "sap.app": {
-        "id": "sap.fe.featureShowcase.childEntities2ui",
+        "id": "sap.fsNavigation.childEntities2ui",
         "type": "application",
         "i18n": "i18n/i18n.properties",
         "applicationVersion": {

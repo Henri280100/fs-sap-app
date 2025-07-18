@@ -1,6 +1,6 @@
 specVersion: '2.4'
 metadata:
-  name: 'featureShowcase'
+  name: 'fssap'
 type: application
 server:
   customMiddleware:
