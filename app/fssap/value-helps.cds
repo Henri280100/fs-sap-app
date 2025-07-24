@@ -1,4 +1,6 @@
 using { sap.fs as schema } from '../../db/schema';
+using from '../../srv/service';
+
 
 //
 // annotations for value helps
@@ -140,3 +142,23 @@ annotate schema.AssignedRegions with {
         }
     });
 }
+annotate service1.RootEntities with @(
+    UI.LineItem #tableView : [
+    ],
+    UI.SelectionPresentationVariant #tableView : {
+        $Type : 'UI.SelectionPresentationVariantType',
+        PresentationVariant : {
+            $Type : 'UI.PresentationVariantType',
+            Visualizations : [
+                '@UI.LineItem#tableView',
+            ],
+        },
+        SelectionVariant : {
+            $Type : 'UI.SelectionVariantType',
+            SelectOptions : [
+            ],
+        },
+        Text : 'Table View',
+    },
+);
+

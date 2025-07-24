@@ -19,7 +19,7 @@
     "subTitle": "{{appSubTitle}}",
     "dataSources": {
       "mainService": {
-        "uri": "/srv1/",
+        "uri": "srv1/",
         "type": "OData",
         "settings": {
           "odataVersion": "4.0"
@@ -102,6 +102,12 @@
           "autoExpandSelect": true,
           "earlyRequests": true
         }
+      },
+      "graph": {
+        "type": "sap.ui.model.json.JSONModel"
+      },
+      "settings": {
+        "type": "sap.ui.model.json.JSONModel"
       }
     },
     "routing": {
@@ -128,6 +134,20 @@
         }
       ],
       "targets": {
+        "Object": {
+          "type": "View",
+          "viewName": "CustomObjectPage",
+          "viewId": "CustomObjectPage",
+          "controlConfiguration": {
+            "@com.sap.vocabularies.UI.v1.PresentationVariant": {
+              "showTotals": true,
+              "visualizations": [
+                "@UI.Chart",
+                "@UI.LineItem"
+              ]
+            }
+          }
+        },
         "RootEntityListReport": {
           "type": "Component",
           "id": "RootEntityListReport",
@@ -560,7 +580,8 @@
             }
           }
         }
-      }
+      },
+      "config": {}
     },
     "contentDensities": {
       "compact": true,
@@ -579,5 +600,9 @@
     "_version": "1.1.0",
     "registrationIds": [],
     "archeType": "transactional"
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "fs-sap-ui-appService"
   }
 }

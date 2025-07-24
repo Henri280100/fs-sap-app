@@ -31,6 +31,8 @@ aspect RootBasis : {
     fieldWithUoM              : Decimal(15, 3);
     uom                       : UnitOfMeasure;
 
+    @Analytics.Measure: true
+    @UI.LineItem: [{$Type: 'UI.DataField', Value: fieldWithPrice}]
     fieldWithPrice            : Decimal(12, 3);
     isoCurrency               : Currency;
 

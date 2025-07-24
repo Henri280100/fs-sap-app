@@ -1,132 +1,137 @@
 _schema-version: 3.3.0
 ID: fs-sap-ui-app
+description: A simple CAP project.
 version: 1.0.0
-description: "A simple CAP project."
-parameters:
-  enable-parallel-deployments: true
-  deploy_mode: html5-repo
-build-parameters:
-  before-all:
-    - builder: custom
-      commands:
-        - npm ci
-        - npx cds build --production
+ 
 modules:
-  - name: fs-sap-ui-app-srv
-    type: nodejs
-    path: gen/srv
-    parameters:
-      instances: 1
-      buildpack: nodejs_buildpack
-    build-parameters:
-      builder: npm-ci
-    provides:
-      - name: srv-api # required by consumers of CAP services (e.g. approuter)
-        properties:
-          srv-url: ${default-url}
-    requires:
-      - name: fs-sap-ui-app-destination
-      - name: fs-sap-ui-app-db
-
-  - name: fs-sap-ui-app-db-deployer
-    type: hdb
-    path: gen/db
-    parameters:
-      buildpack: nodejs_buildpack
-    requires:
-      - name: fs-sap-ui-app-db
-
-  - name: fs-sap-ui-app-app-deployer
-    type: com.sap.application.content
-    path: gen
-    requires:
-      - name: fs-sap-ui-app-html5-repo-host
-        parameters:
-          content-target: true
-    build-parameters:
-      build-result: app/
-      requires:
-        - name: fssapuiappfsNavigation
-          artifacts:
-            - fsNavigation.zip
-          target-path: app/
-        - name: fssapuiappfssap
-          artifacts:
-            - fssap.zip
-          target-path: app/
-        - name: fssapuiappmedia
-          artifacts:
-            - media.zip
-          target-path: app/
-
-  - name: fssapuiappfsNavigation
-    type: html5
-    path: app/fsNavigation
-    build-parameters:
-      build-result: dist
-      builder: custom
-      commands:
-        - npm ci
-        - npm run build
-      supported-platforms:
-        []
-  - name: fssapuiappfssap
-    type: html5
-    path: app/fssap
-    build-parameters:
-      build-result: dist
-      builder: custom
-      commands:
-        - npm ci
-        - npm run build
-      supported-platforms:
-        []
-  - name: fssapuiappmedia
-    type: html5
-    path: app/media
-    build-parameters:
-      build-result: dist
-      builder: custom
-      commands:
-        - npm ci
-        - npm run build
-      supported-platforms:
-        []
-
-resources:
-  - name: fs-sap-ui-app-destination
-    type: org.cloudfoundry.managed-service
-    requires:
-      - name: srv-api
-    parameters:
-      service: destination
-      service-plan: lite
-      config:
-        HTML5Runtime_enabled: true
-        init_data:
-          instance:
-            existing_destinations_policy: update
-            destinations:
-              - Name: srv-api
-                URL: ~{srv-api/srv-url}
-                Authentication: NoAuthentication
-                Type: HTTP
-                ProxyType: Internet
-                HTML5.ForwardAuthToken: true
-                HTML5.DynamicDestination: true
-              - Name: ui5
-                URL: https://ui5.sap.com
-                Authentication: NoAuthentication
-                Type: HTTP
-                ProxyType: Internet
+- name: fs-sap-ui-app-srv
+  type: nodejs
+  path: gen/srv
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+    instances: 1
+  build-parameters:
+    builder: npm-ci
+    ignore:
+      - "node_modules/"
+  requires:
+    - name: fs-sap-ui-app-db
+    - name: fs-sap-ui-app-destination-service
+ 
+- name: fs-sap-ui-app-db-deployer
+  type: hdb
+  path: gen/db
+  parameters:
+    buildpack: nodejs_buildpack
+  requires:
   - name: fs-sap-ui-app-db
-    type: com.sap.xs.hdi-container
+  build-parameters:
+    ignore:
+      - "node_modules/"
+ 
+- name: fs-sap-ui-app-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: fs-sap-ui-app-repo-host
     parameters:
-      service: hana
-      service-plan: hdi-shared
-
-  - name: fs-sap-ui-app-html5-repo-host
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: html5-apps-repo
-      service-plan: app-host
+      content-target: true
+  - name: fs-sap-ui-app-destination-service
+  build-parameters:
+    build-result: resources
+    requires:
+      - name: fssap
+        artifacts:
+          - fs-sap-ui-app.zip
+        target-path: resources/
+ 
+ 
+  # ------------- APPLICATION: REGISTER ----------------
+- name: fssap
+  # ------------------------------------------------------------
+  type: html5
+  path: app/fssap
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+      - npm install
+      - npm run build
+    supported-platforms: []
+  requires:
+    - name: fs-sap-ui-app-repo-host            # Thêm
+    - name: fs-sap-ui-app-destination-service  # Thêm
+ 
+  # ------------------ DESTINATION CONTENT ---------------------
+- name: fs-sap-ui-app-destinationcontent
+  # ------------------------------------------------------------
+  type: com.sap.application.content
+  build-parameters:
+    no-source: true
+  requires:
+    - name: fs-sap-ui-app-repo-host
+      parameters:
+        service-key:
+          name: fs-sap-ui-app-repo-host-key
+    - name: fs-sap-ui-app-destination-service
+      parameters:
+        content-target: true
+    - name: srv-api
+  parameters:
+    content:
+      instance:
+        existing_destinations_policy: update
+        destinations:
+          - Name: fs-sap-ui-app-repo-host
+            ServiceInstanceName: fs-sap-ui-app-repo-host
+            ServiceKeyName: fs-sap-ui-app-repo-host-key
+            sap.cloud.service: fs-sap-ui-appService
+ 
+resources:
+- name: fs-sap-ui-app-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
+  properties:
+    hdi-service-name: ${service-name}
+ 
+- name: fs-sap-ui-app-repo-runtime
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-plan: app-runtime
+ 
+- name: fs-sap-ui-app-repo-host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-plan: app-host
+    service-name: fs-sap-ui-app-repo-host
+ 
+- name: fs-sap-ui-app-destination-service
+  type: org.cloudfoundry.managed-service
+  requires:
+    - name: srv-api
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: fs-sap-ui-app-srv
+            URL: ~{srv-api/srv-url}
+            Type: HTTP
+            ProxyType: Internet
+            HTML5.ForwardAuthToken: true
+            HTML5.DynamicDestination: true
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: fs-sap-ui-app-destination-service
+    service-plan: lite

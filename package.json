@@ -8,8 +8,7 @@
   "dependencies": {
     "@cap-js/hana": "^2",
     "@sap/cds": "^9",
-    "@sap/xssec": "^4.9.0",
-    "cds-launchpad-plugin": "^2.2.0",
+    "@sap/xssec": "^4",
     "content-disposition": "^0.5.4",
     "express": "^4",
     "npm": "^11.4.2"
@@ -28,7 +27,8 @@
     "start": "cds-serve",
     "undeploy": "cf undeploy fs-sap-ui-app --delete-services --delete-service-keys --delete-service-brokers",
     "build": "rimraf resources mta_archives && mbt build --mtar archive",
-    "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
+    "watch-sapuitest": "cds watch --open sapuitest/webapp/index.html?sap-ui-xx-viewCache=false"
   },
   "sapux": [
     "app/fssap",
@@ -36,8 +36,11 @@
   ],
   "cds": {
     "requires": {
-      "destinations": true,
-      "html5-runtime": true
+      "auth": "mocked",
+      "kind": "hana"
+    },
+    "launchpad": {
+      "version": "1.132.0"
     }
   }
 }

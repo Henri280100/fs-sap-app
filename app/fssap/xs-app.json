@@ -3,28 +3,23 @@
   "authenticationMethod": "route",
   "routes": [
     {
-      "source": "^/resources/(.*)$",
-      "target": "/resources/$1",
-      "authenticationType": "none",
-      "destination": "ui5"
-    },
-    {
-      "source": "^/test-resources/(.*)$",
-      "target": "/test-resources/$1",
-      "authenticationType": "none",
-      "destination": "ui5"
-    },
-    {
       "source": "^(.*)$",
       "target": "$1",
       "service": "html5-apps-repo-rt",
-      "authenticationType": "xsuaa"
+      "authenticationType": "none"
     },
     {
-      "source": "^/?odata/(.*)$",
-      "target": "/odata/$1",
-      "destination": "srv-api",
-      "csrfProtection": true
+      "source": "^/srv1/(.*)$",
+      "destination": "fs-sap-ui-app-srv",
+      "authenticationType": "none",
+      "csrfProtection": false,
+      "target": "/srv1/$1"
+    },
+    {
+      "source": "^/resources/(.*)$",
+      "target": "/resources/$1",
+      "destination": "sapui5",
+      "authenticationType": "none"
     }
   ]
 }

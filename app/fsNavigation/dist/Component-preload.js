@@ -1,5 +1,5 @@
 //@ui5-bundle sap/fsNavigation/childEntities2ui/Component-preload.js
-sap.ui.predefine("sap/fsNavigation/childEntities2ui/Component", ["sap/fe/core/AppComponent"],function(e){"use strict";return e.extend("sap.fe.featureShowcase.childEntities2ui.Component",{metadata:{manifest:"json"}})});
+sap.ui.predefine("sap/fsNavigation/childEntities2ui/Component", ["sap/fe/core/AppComponent"],function(e){"use strict";return e.extend("sap.fsNavigation.childEntities2ui.Component",{metadata:{manifest:"json"}})});
 sap.ui.require.preload({
 	"sap/fsNavigation/childEntities2ui/i18n/i18n.properties":'# This is the resource bundle for items3\n\n#Texts for manifest.json\n\n#XTIT: Application name\nappTitle=Child Entity 2\n\n#YDES: Application description\nappDescription=A SAP Fiori application.\n',
 	"sap/fsNavigation/childEntities2ui/i18n/i18n_en.properties":'# This is the resource bundle for items3\n\n#Texts for manifest.json\n\n#XTIT: Application name\nappTitle=Child Entity 2\n\n#YDES: Application description\nappDescription=A SAP Fiori application.\n',

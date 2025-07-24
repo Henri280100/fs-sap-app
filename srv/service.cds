@@ -65,6 +65,7 @@ service service1 @(path : '/srv1') {
 
     action criticalAction();
 
+    
 
     entity ChildEntities1       as projection on persistence.ChildEntities1;
     entity ChildEntities2       as projection on persistence.ChildEntities2;
@@ -77,6 +78,8 @@ service service1 @(path : '/srv1') {
     entity RootEntityVariants   as projection on persistence.RootEntityVariants;
     @readonly
     entity Contacts             as projection on persistence.Contacts;
+
+
 
     //Entity used for semantic key filter
     @odata.draft.enabled : false

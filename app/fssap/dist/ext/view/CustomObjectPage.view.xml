@@ -1,4 +1,4 @@
-<mvc:View
+<mvc:View xmlns:smarttable="sap.ui.comp.smarttable"
 		controllerName="sap.fe.featureShowcase.mainApp.ext.controller.CustomObjectPage"
 		xmlns="sap.suite.ui.commons.networkgraph"
 		xmlns:mvc="sap.ui.core.mvc"
@@ -17,8 +17,11 @@ https://sapui5.hana.ondemand.com/#/entity/sap.suite.ui.commons.networkgraph.Grap
 					text="Custom Object Page (SAP UI5 Network Graph Sample)"
 					class="sapUiTinyMarginTop sapUiMediumMarginBeginEnd"
 				/>
+			
 			<l:FixFlex vertical="true">
 				<l:fixContent>
+					
+			
 					<m:OverflowToolbar>
 						<m:content>
 							<m:Select id="orientation" tooltip="Orientation" selectedKey="{settings>/orientation}">

@@ -15,6 +15,8 @@ using {
     managed
 } from '@sap/cds/common';
 
+
+
 entity RootEntities : cuid, managed, rootBasis {
     childEntities1  : Composition of many ChildEntities1
                           on childEntities1.parent = $self;
@@ -26,15 +28,15 @@ entity RootEntities : cuid, managed, rootBasis {
     regions         : Composition of many AssignedRegions
                           on regions.root = $self;
 
-    @cds.persistence.skip
-    @readonly
-    @UI.LineItem       : [{
-        $Type   : 'UI.DataField',
-        Label   : 'Total Price',
-        Value   : totalPrice,
-        position: 50,
+    // @cds.persistence.skip
+    // @readonly
+    // @UI.LineItem       : [{
+    //     $Type   : 'UI.DataField',
+    //     Label   : 'Total Price',
+    //     Value   : totalPrice,
+    //     position: 50,
 
-    }]
-    @UI.DataPoint.
-    totalPrice      : Decimal(9, 2);
+    // }]
+    // @UI.DataPoint.
+    // totalPrice      : Decimal(9, 2);
 };

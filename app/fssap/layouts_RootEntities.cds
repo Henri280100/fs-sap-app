@@ -34,6 +34,7 @@ annotate service.RootEntities with @(
 
 );
 
+
 /**
     UI.LineItem
  */
@@ -55,7 +56,7 @@ annotate service.RootEntities with @(
             Value            : fieldWithPrice,
             ![@UI.Importance]: #High,
         },
-        
+
         {
             //Search-Term: #ToolTip
             $Type : 'UI.DataFieldForAnnotation',
@@ -564,14 +565,21 @@ annotate service.RootEntities with @(UI.Facets: [
 
 
 annotate service.RootEntities with @(UI.PresentationVariant: {
+    // set group by name as default
     GroupBy       : [stringProperty],
+    Total : [fieldWithPrice],
+    TotalBy: [stringProperty],
     SortOrder     : [ //Default sort order
     {
         Property  : stringProperty,
         Descending: false,
     }, ],
-    Visualizations: ['@UI.LineItem'],
-}, );
+    
+    Visualizations: ['@UI.Chart','@UI.LineItem'],
+},
+
+
+);
 
 
 annotate service.RootEntities with @(
@@ -641,6 +649,7 @@ annotate service.RootEntities with @(UI.SelectionPresentationVariant #SelectionP
             Property  : fieldWithPrice,
             Descending: false,
         }, ],
+
         //Add Visualizations property can contain different line items then the default one
         Visualizations: ['@UI.LineItem#simplified'],
     },
